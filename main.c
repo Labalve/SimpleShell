@@ -75,7 +75,11 @@ void lsShell()
             time_t epochTimeAsTimeT = epochTime;
             timeinfo = localtime(&epochTimeAsTimeT);
             strftime (dateBuffer, 80, "%Y %b %d %H:%M", timeinfo);
+
             struct passwd *pw = getpwuid(fileStat.st_uid);
+
+            printFileMode();
+
             printf("\t%d\t%s\t%s\t", fileStat.st_size, pw->pw_name, dateBuffer);
         }
         printf(" %s", currentFile->d_name);
