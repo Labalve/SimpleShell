@@ -14,14 +14,14 @@ void welcomeScreen()
     printf("\t===========================\n\n");
 }
 
-void exitBash(int status)
-{
-    exit(status);
-}
-
 void exitBash()
 {
-    exit(0);
+     if(ParamNumber > 0){
+            exit(atoi(inputParamHandler[0]));
+        }
+        else{
+            exit(0);
+        }
 }
 
 int printPrompt()
@@ -60,15 +60,11 @@ void getInput()
 void actionManager()
 {
     if(strcmp(inputHandler, "exit") == 0){
-        printf("exituje sb :)");
-        if(ParamNumber > 0){
-            exitBash(atoi(inputParamHandler[0]));
-        }
-        else{
-            exitBash();
-        }
+        exitBash();
         printf("\n");
     }
+    memset(inputHandler,0,sizeof(inputHandler));
+    memset(inputParamHandler,0,sizeof(inputParamHandler));
 }
 
 int main()
