@@ -5,15 +5,23 @@
 
 char * inputHandler;
 char inputParamHandler[10][10];
+int ParamNumber = 0;
 
-void welcomeScreen(){
+void welcomeScreen()
+{
     printf("\n\t==========C-Shell==========\n");
     printf("\t==author: Krzysztof Kulak==\n");
     printf("\t===========================\n\n");
 }
 
-void exitBash(int status){
+void exitBash(int status)
+{
     exit(status);
+}
+
+void exitBash()
+{
+    exit(0);
 }
 
 int printPrompt()
@@ -36,14 +44,14 @@ void getInput()
     scanf ("%[^\n]%*c", input);
     const char s[2] = " ";
     char *token;
-
     token = strtok(input, s);
     int i = 0;
     while( token != NULL ) {
         if(i == 0) inputHandler = token;
-        else strcpy(inputParamHandler[(i-1)], token);
-        printf( " %s\n", token );
-    //inputHandlingArray[i++] = token;
+        else {
+            strcpy(inputParamHandler[(i-1)], token);
+            ParamNumber++;
+        }
         token = strtok(NULL, s);
         i++;
    }
@@ -51,10 +59,15 @@ void getInput()
 
 void actionManager()
 {
-    //printf("%s", *inputHandler);
-    if(*inputHandler == "exit"){
-        exit(*inputParamHandler[0]);
+    if(strcmp(inputHandler, "exit") == 0){
         printf("exituje sb :)");
+        if(ParamNumber > 0){
+            exitBash(atoi(inputParamHandler[0]));
+        }
+        else{
+            exitBash();
+        }
+        printf("\n");
     }
 }
 
