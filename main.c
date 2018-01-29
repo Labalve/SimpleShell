@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdbool.h>
-
+#include <pwd.h>
 #include <time.h>
 
 
@@ -75,11 +75,10 @@ void lsShell()
             time_t epochTimeAsTimeT = epochTime;
             timeinfo = localtime(&epochTimeAsTimeT);
             strftime (dateBuffer, 80, "%Y %b %d %H:%M", timeinfo);
-            printf("%s\t%d\t%d\t", dateBuffer, fileStat.st_mode, fileStat.st_size);
-            printFileMode(fileStat);
+            struct passwd *pw = getpwuid(fileStat.st_uid);
+            printf("\t%d\t%s\t%s\t", fileStat.st_size, pw->pw_name, dateBuffer);
         }
         printf(" %s", currentFile->d_name);
-//        if(withDetails && fileStat.st_size != 0) printf("%d", fileStat.st_mode);
         if(withDetails) printf("\n");
     }
     closedir(givenDirectory);
@@ -87,7 +86,6 @@ void lsShell()
 }
 
 void printFileMode(struct stat fileStat){
-    printf("File Permissions: \t");
     printf( (S_ISDIR(fileStat.st_mode)) ? "d" : "-");
     printf( (fileStat.st_mode & S_IRUSR) ? "r" : "-");
     printf( (fileStat.st_mode & S_IWUSR) ? "w" : "-");
