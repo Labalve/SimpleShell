@@ -105,7 +105,7 @@ int main()
         };
 
         actionManager();
-
+        clearGlobalVars();
     }
 
     return 0;
