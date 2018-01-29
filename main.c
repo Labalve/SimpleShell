@@ -80,7 +80,7 @@ void lsShell()
 
             printFileMode();
 
-            printf("\t%d\t%s\t%s\t", fileStat.st_size, pw->pw_name, dateBuffer);
+            printf("\t%s\t%d\t%s\t", pw->pw_name, fileStat.st_size, dateBuffer);
         }
         printf(" %s", currentFile->d_name);
         if(withDetails) printf("\n");
