@@ -16,12 +16,24 @@ void welcomeScreen()
 
 void exitBash()
 {
-     if(ParamNumber > 0){
-            exit(atoi(inputParamHandler[0]));
-        }
-        else{
-            exit(0);
-        }
+    if(ParamNumber > 0){
+        exit(atoi(inputParamHandler[0]));
+    }
+    else{
+        exit(0);
+    }
+}
+
+void cdBash()
+{
+    if(ParamNumber > 0){
+        if(chdir(inputParamHandler[0]) == -1){
+            printf("wrong path provided\n");
+        };
+    }
+    else{
+        printf("no path provided\n");
+    }
 }
 
 int printPrompt()
@@ -62,6 +74,9 @@ void actionManager()
     if(strcmp(inputHandler, "exit") == 0){
         exitBash();
         printf("\n");
+    }
+    if(strcmp(inputHandler, "cd") == 0){
+        cdBash();
     }
     memset(inputHandler,0,sizeof(inputHandler));
     memset(inputParamHandler,0,sizeof(inputParamHandler));
