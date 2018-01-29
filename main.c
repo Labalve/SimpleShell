@@ -7,6 +7,9 @@
 #include <sys/stat.h>
 #include <stdbool.h>
 
+#include <time.h>
+
+
 char * inputHandler;
 char inputParamHandler[10][10];
 int ParamNumber = 0;
@@ -36,6 +39,7 @@ void exitShell()
 
 void lsShell()
 {
+    char dateBuffer[100];
     char cwd[1024];
     DIR *givenDirectory;
     struct dirent *currentFile;
@@ -57,16 +61,43 @@ void lsShell()
     givenDirectory = opendir(getcwd(cwd, sizeof(cwd)));
     while((currentFile = readdir(givenDirectory)) != NULL)
     {
-        if(withHidden == false){
+        if(withHidden == false)
+        {
             if(startsWith(currentFile->d_name, ".")) continue;
         }
         stat(currentFile->d_name, &fileStat);
-        if(withDetails)printf("%d\t",fileStat.st_size);
+        if(withDetails)
+        {
+            char dateBuffer[80];
+            struct tm tm;
+            int epochTime = fileStat.st_mtime;
+            struct tm * timeinfo;
+            time_t epochTimeAsTimeT = epochTime;
+            timeinfo = localtime(&epochTimeAsTimeT);
+            strftime (dateBuffer, 80, "%Y %b %d %H:%M", timeinfo);
+            printf("%s\t%d\t%d\t", dateBuffer, fileStat.st_mode, fileStat.st_size);
+            printFileMode(fileStat);
+        }
         printf(" %s", currentFile->d_name);
+//        if(withDetails && fileStat.st_size != 0) printf("%d", fileStat.st_mode);
         if(withDetails) printf("\n");
     }
     closedir(givenDirectory);
     printf("\n");
+}
+
+void printFileMode(struct stat fileStat){
+    printf("File Permissions: \t");
+    printf( (S_ISDIR(fileStat.st_mode)) ? "d" : "-");
+    printf( (fileStat.st_mode & S_IRUSR) ? "r" : "-");
+    printf( (fileStat.st_mode & S_IWUSR) ? "w" : "-");
+    printf( (fileStat.st_mode & S_IXUSR) ? "x" : "-");
+    printf( (fileStat.st_mode & S_IRGRP) ? "r" : "-");
+    printf( (fileStat.st_mode & S_IWGRP) ? "w" : "-");
+    printf( (fileStat.st_mode & S_IXGRP) ? "x" : "-");
+    printf( (fileStat.st_mode & S_IROTH) ? "r" : "-");
+    printf( (fileStat.st_mode & S_IWOTH) ? "w" : "-");
+    printf( (fileStat.st_mode & S_IXOTH) ? "x" : "-");
 }
 
 void cdShell()
@@ -152,6 +183,7 @@ void actionManager()
 }
 
 void clearGlobalVars()
+
 {
     memset(inputHandler,0,sizeof(inputHandler));
     memset(inputParamHandler,0,sizeof(inputParamHandler));
