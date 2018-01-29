@@ -14,7 +14,7 @@ void welcomeScreen()
     printf("\t===========================\n\n");
 }
 
-void exitBash()
+void exitShell()
 {
     if(ParamNumber > 0){
         exit(atoi(inputParamHandler[0]));
@@ -24,7 +24,7 @@ void exitBash()
     }
 }
 
-void cdBash()
+void cdShell()
 {
     if(ParamNumber > 0){
         if(chdir(inputParamHandler[0]) == -1){
@@ -34,6 +34,19 @@ void cdBash()
     else{
         printf("no path provided\n");
     }
+}
+
+void helpShell()
+{
+    char * shortHelp = "This is Simple Shell application created by Krzysztof Kulak as a university project.\nIt implements basic shell functionality.\nUse -l flag to get longer help message.";
+    char * longHelp = "This is Simple Shell application created by Krzysztof Kulak as a university project.\nIt implements basic shell functionality.\n\ncd <PATH> - change directory to path given in <PATH> parameter\nexit <STATUS> - ends Shell process and return 0 or number given in <STATUS> parameter\nhelp <FLAG> - displays help message. Command with -l flag shows longer help message.";
+    if(ParamNumber > 0){
+        if(strcmp(inputParamHandler[0],"-l") == 0){
+            printf("%s", longHelp);
+        }
+    }
+    else printf(shortHelp);
+    printf("\n");
 }
 
 int printPrompt()
@@ -79,13 +92,15 @@ int getInput()
 void actionManager()
 {
     if(strcmp(inputHandler, "exit") == 0){
-        exitBash();
+        exitShell();
         printf("\n");
     }
     if(strcmp(inputHandler, "cd") == 0){
-        cdBash();
+        cdShell();
     }
-
+    if(strcmp(inputHandler, "help") == 0){
+        helpShell();
+    }
 }
 
 void clearGlobalVars()
