@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <dirent.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdbool.h>
 
 char * inputHandler;
 char inputParamHandler[10][10];
@@ -14,6 +18,12 @@ void welcomeScreen()
     printf("\t===========================\n\n");
 }
 
+bool startsWith(const char *haystack, const char *needle)
+{
+   if(strncmp(haystack, needle, strlen(needle)) == 0) return 1;
+   return 0;
+}
+
 void exitShell()
 {
     if(ParamNumber > 0){
@@ -24,11 +34,46 @@ void exitShell()
     }
 }
 
+void lsShell()
+{
+    char cwd[1024];
+    DIR *givenDirectory;
+    struct dirent *currentFile;
+    struct stat fileStat;
+    bool withDetails = false;
+    bool withHidden = false;
+    if(ParamNumber > 0){
+        if(strcmp(inputParamHandler[0],"-l") == 0) withDetails = true;
+        else if(strcmp(inputParamHandler[0],"-a") == 0) withHidden = true;
+        if(ParamNumber > 1){
+            if(strcmp(inputParamHandler[1],"-l") == 0){
+                withDetails = true;
+            }
+            else if(strcmp(inputParamHandler[1],"-a") == 0){
+                withHidden = true;
+            }
+        }
+    }
+    givenDirectory = opendir(getcwd(cwd, sizeof(cwd)));
+    while((currentFile = readdir(givenDirectory)) != NULL)
+    {
+        if(withHidden == false){
+            if(startsWith(currentFile->d_name, ".")) continue;
+        }
+        stat(currentFile->d_name, &fileStat);
+        if(withDetails)printf("%d\t",fileStat.st_size);
+        printf(" %s", currentFile->d_name);
+        if(withDetails) printf("\n");
+    }
+    closedir(givenDirectory);
+    printf("\n");
+}
+
 void cdShell()
 {
     if(ParamNumber > 0){
         if(chdir(inputParamHandler[0]) == -1){
-            printf("wrong path provided\n");
+            printf("wrong or inaccessible path provided\n");
         };
     }
     else{
@@ -100,6 +145,9 @@ void actionManager()
     }
     if(strcmp(inputHandler, "help") == 0){
         helpShell();
+    }
+    if(strcmp(inputHandler, "ls") == 0){
+        lsShell();
     }
 }
 
