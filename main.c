@@ -141,6 +141,33 @@ int printPrompt()
     }
 }
 
+void tailShell()
+{
+    FILE *in;
+    int count = 0;
+    long int pos;
+    char s[100];
+    in = fopen(inputHandler, "r");
+    if (in == NULL) {
+        perror("fopen");
+        exit(EXIT_FAILURE);
+    }
+    fseek(in, 0, SEEK_END);
+    pos = ftell(in);
+    while (pos) {
+        fseek(in, --pos, SEEK_SET);
+        if (fgetc(in) == '\n') {
+            if (count++ == 10) break;
+        }
+    }
+    while (fgets(s, sizeof(s), in) != NULL) {
+        fprint("%s", s);
+    }
+    fclose(in);
+    return 0;
+}
+}
+
 int otherCommand()
 {
     char finalCommand[120];
