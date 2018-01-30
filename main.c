@@ -117,7 +117,7 @@ void cdShell()
 void helpShell()
 {
     char * shortHelp = "This is Simple Shell application created by Krzysztof Kulak as a university project.\nIt implements basic shell functionality.\nUse -l flag to get longer help message.";
-    char * longHelp = "This is Simple Shell application created by Krzysztof Kulak as a university project.\nIt implements basic shell functionality.\n\ncd <PATH> - change directory to path given in <PATH> parameter\n\nexit <STATUS> - ends Shell process and return 0 or number given in <STATUS> parameter\n\nhelp <FLAG> - displays help message. Command with -l flag shows longer help message.\n\nls <FLAG> - lists files and catalogs in the current directory.\n\tFlag -a shows hidden files.\n\tFlag -l shows extended list view in format: <file mode> <size> <owner> <date of the last modification> <name>\n";
+    char * longHelp = "This is Simple Shell application created by Krzysztof Kulak as a university project.\nIt implements basic shell functionality.\n\ncd <PATH> - change directory to path given in <PATH> parameter\n\nexit <STATUS> - ends Shell process and return 0 or number given in <STATUS> parameter\n\nhelp <FLAG> - displays help message. Command with -l flag shows longer help message.\n\nls <FLAG> - lists files and catalogs in the current directory.\n\tFlag -a shows hidden files.\n\tFlag -l shows extended list view in format: <file mode> <size> <owner> <date of the last modification> <name>\n\nhead <PATH> <FLAG> - shows first n lines of file with path provided in <PATH>. n is equal 10, unless flag -n and value provided.";
     if(paramNumber > 0){
         if(strcmp(inputParamHandler[0],"-l") == 0){
             printf("%s", longHelp);
@@ -150,8 +150,8 @@ void headShell()
     if (fp == NULL) {
         printf("Cannot open file\n");
     } else {
-        if(paramNumber == 3){
-            if(inputParamHandler[1] == "-n")
+        if(paramNumber >= 3){
+            if(strcmp(inputParamHandler[1], "-n") == 0)
             {
                 num = atoi(inputParamHandler[2]);
             }
