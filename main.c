@@ -12,7 +12,7 @@
 
 char * inputHandler;
 char inputParamHandler[10][10];
-int ParamNumber = 0;
+int paramNumber = 0;
 
 void welcomeScreen()
 {
@@ -29,7 +29,7 @@ bool startsWith(const char *haystack, const char *needle)
 
 void exitShell()
 {
-    if(ParamNumber > 0){
+    if(paramNumber > 0){
         exit(atoi(inputParamHandler[0]));
     }
     else{
@@ -59,10 +59,10 @@ void lsShell()
     struct stat fileStat;
     bool withDetails = false;
     bool withHidden = false;
-    if(ParamNumber > 0){
+    if(paramNumber > 0){
         if(strcmp(inputParamHandler[0],"-l") == 0) withDetails = true;
         else if(strcmp(inputParamHandler[0],"-a") == 0) withHidden = true;
-        if(ParamNumber > 1){
+        if(paramNumber > 1){
             if(strcmp(inputParamHandler[1],"-l") == 0){
                 withDetails = true;
             }
@@ -104,7 +104,7 @@ void lsShell()
 
 void cdShell()
 {
-    if(ParamNumber > 0){
+    if(paramNumber > 0){
         if(chdir(inputParamHandler[0]) == -1){
             printf("wrong or inaccessible path provided\n");
         };
@@ -118,7 +118,7 @@ void helpShell()
 {
     char * shortHelp = "This is Simple Shell application created by Krzysztof Kulak as a university project.\nIt implements basic shell functionality.\nUse -l flag to get longer help message.";
     char * longHelp = "This is Simple Shell application created by Krzysztof Kulak as a university project.\nIt implements basic shell functionality.\n\ncd <PATH> - change directory to path given in <PATH> parameter\n\nexit <STATUS> - ends Shell process and return 0 or number given in <STATUS> parameter\n\nhelp <FLAG> - displays help message. Command with -l flag shows longer help message.\n\nls <FLAG> - lists files and catalogs in the current directory.\n\tFlag -a shows hidden files.\n\tFlag -l shows extended list view in format: <file mode> <size> <owner> <date of the last modification> <name>\n";
-    if(ParamNumber > 0){
+    if(paramNumber > 0){
         if(strcmp(inputParamHandler[0],"-l") == 0){
             printf("%s", longHelp);
         }
@@ -151,7 +151,14 @@ void headShell()
         printf("Cannot open file\n");
         return 1;
     }
-    num = 10;
+    if(paramNumber == 3){
+        if(inputParamHandler[1] == "-n")
+        {
+            num = atoi(inputParamHandler[2]);
+        }
+    } else {
+        num = 10;
+    }
     array = malloc(4096 * (num + 1));
     for (count = pos = 0; fgets(array[pos], 4096, fp) != NULL; count++) {
         if (count < num)
@@ -163,11 +170,6 @@ void headShell()
         pos = count - num;
         if (pos > num) {
             printf("...\n");
-        } else {
-            pos = num;
-        }
-        for (; pos < count; pos++) {
-            fputs(array[pos % (num + 1)], stdout);
         }
     }
     fclose(fp);
@@ -177,7 +179,7 @@ int otherCommand()
 {
     char finalCommand[120];
     strcat(finalCommand, inputHandler);
-    for(int i = 0; i < ParamNumber; i++){
+    for(int i = 0; i < paramNumber; i++){
         strcat(finalCommand, " ");
         strcat(finalCommand, inputParamHandler[i]);
     }
@@ -201,7 +203,7 @@ int getInput()
          if(i == 0) inputHandler = token;
          else {
              strcpy(inputParamHandler[(i-1)], token);
-             ParamNumber++;
+             paramNumber++;
          }
          token = strtok(NULL, s);
          i++;
@@ -237,7 +239,7 @@ void clearGlobalVars()
 {
     memset(inputHandler,0,sizeof(inputHandler));
     memset(inputParamHandler,0,sizeof(inputParamHandler));
-    ParamNumber = 0;
+    paramNumber = 0;
 }
 
 int main()
