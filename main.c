@@ -151,19 +151,20 @@ void tailShell()
     if (in == NULL) {
         printf("file does not exist, or you don't have permission to read it");
     }
-    fseek(in, 0, SEEK_END);
-    pos = ftell(in);
-    while (pos) {
-        fseek(in, --pos, SEEK_SET);
-        if (fgetc(in) == '\n') {
-            if (count++ == 10) break;
+    else {
+        fseek(in, 0, SEEK_END);
+        pos = ftell(in);
+        while (pos) {
+            fseek(in, --pos, SEEK_SET);
+            if (fgetc(in) == '\n' || fgetc(in) == EOF) {
+                if (count++ == 10) break;
+            }
         }
+        while (fgets(s, sizeof(s), in) != NULL) {
+            printf("%s", s);
+        }
+        fclose(in);
     }
-    while (fgets(s, sizeof(s), in) != NULL) {
-        printf("%s", s);
-    }
-    fclose(in);
-    return 0;
 }
 
 int otherCommand()
