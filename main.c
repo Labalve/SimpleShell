@@ -141,6 +141,11 @@ int printPrompt()
     }
 }
 
+int otherCommand()
+{
+    return system(inputHandler);
+}
+
 int getInput()
 {
     char input[100];
@@ -181,6 +186,9 @@ void actionManager()
     }
     if(strcmp(inputHandler, "ls") == 0){
         lsShell();
+    }
+    else {
+        otherCommand();
     }
 }
 
