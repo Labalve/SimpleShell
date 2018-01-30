@@ -161,11 +161,10 @@ void tailShell()
         }
     }
     while (fgets(s, sizeof(s), in) != NULL) {
-        fprint("%s", s);
+        printf("%s", s);
     }
     fclose(in);
     return 0;
-}
 }
 
 int otherCommand()
@@ -219,6 +218,9 @@ void actionManager()
     }
     else if(strcmp(inputHandler, "ls") == 0){
         lsShell();
+    }
+    else if(strcmp(inputHandler, "tail") == 0){
+        tailShell();
     }
     else {
         otherCommand();
