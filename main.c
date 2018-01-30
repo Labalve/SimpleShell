@@ -149,8 +149,7 @@ void tailShell()
     char s[100];
     in = fopen(inputHandler, "r");
     if (in == NULL) {
-        perror("fopen");
-        exit(EXIT_FAILURE);
+        printf("file does not exist, or you don't have permission to read it");
     }
     fseek(in, 0, SEEK_END);
     pos = ftell(in);
