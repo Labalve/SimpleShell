@@ -117,7 +117,7 @@ void cdShell()
 void helpShell()
 {
     char * shortHelp = "This is Simple Shell application created by Krzysztof Kulak as a university project.\nIt implements basic shell functionality.\nUse -l flag to get longer help message.";
-    char * longHelp = "This is Simple Shell application created by Krzysztof Kulak as a university project.\nIt implements basic shell functionality.\n\ncd <PATH> - change directory to path given in <PATH> parameter\nexit <STATUS> - ends Shell process and return 0 or number given in <STATUS> parameter\nhelp <FLAG> - displays help message. Command with -l flag shows longer help message.";
+    char * longHelp = "This is Simple Shell application created by Krzysztof Kulak as a university project.\nIt implements basic shell functionality.\n\ncd <PATH> - change directory to path given in <PATH> parameter\nexit <STATUS> - ends Shell process and return 0 or number given in <STATUS> parameter\nhelp <FLAG> - displays help message. Command with -l flag shows longer help message.\nls <FLAG> - lists files and catalogs in the current directory. Flag -a shows hidden files. Flag -l shows extended list view in format: <file mode> <size> <owner> <date of the last modification> <name>/n";
     if(ParamNumber > 0){
         if(strcmp(inputParamHandler[0],"-l") == 0){
             printf("%s", longHelp);
@@ -185,7 +185,6 @@ void actionManager()
 }
 
 void clearGlobalVars()
-
 {
     memset(inputHandler,0,sizeof(inputHandler));
     memset(inputParamHandler,0,sizeof(inputParamHandler));
