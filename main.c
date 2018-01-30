@@ -143,6 +143,8 @@ int printPrompt()
 
 int otherCommand()
 {
+    printf("OTHER COMMAND");
+    printf(inputHandler);
     return system(inputHandler);
 }
 
