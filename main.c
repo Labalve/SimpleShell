@@ -141,30 +141,40 @@ int printPrompt()
     }
 }
 
-void tailShell()
+void headShell()
 {
     FILE *in;
     int count = 0;
     long int pos;
     char s[100];
-    in = fopen(inputHandler, "r");
-    if (in == NULL) {
-        printf("file does not exist, or you don't have permission to read it");
+    int num, pos, count;
+    FILE *fp;
+    char (*array)[4096];  /* pointer to an array of buffers */
+    fp = fopen(inputHandler, "r");
+    if (fp == NULL) {
+        printf("Cannot open file %s\n", argv[1]);
+        return 1;
     }
-    else {
-        fseek(in, 0, SEEK_END);
-        pos = ftell(in);
-        while (pos) {
-            fseek(in, --pos, SEEK_SET);
-            if (fgetc(in) == '\n' || fgetc(in) == EOF) {
-                if (count++ == 10) break;
-            }
-        }
-        while (fgets(s, sizeof(s), in) != NULL) {
-            printf("%s", s);
-        }
-        fclose(in);
+    num = 10;
+    array = malloc(4096 * (num + 1));
+    for (count = pos = 0; fgets(array[pos], 4096, fp) != NULL; count++) {
+        if (count < num)
+            fputs(array[pos], stdout);
+        if (++pos >= num + 1)
+            pos = 0;
     }
+    if (count > num) {
+        pos = count - num;
+        if (pos > num) {
+            printf("...\n");
+        } else {
+            pos = num;
+        }
+        for (; pos < count; pos++) {
+            fputs(array[pos % (num + 1)], stdout);
+        }
+    }
+    fclose(fp);
 }
 
 int otherCommand()
@@ -219,8 +229,8 @@ void actionManager()
     else if(strcmp(inputHandler, "ls") == 0){
         lsShell();
     }
-    else if(strcmp(inputHandler, "tail") == 0){
-        tailShell();
+    else if(strcmp(inputHandler, "head") == 0){
+        headShell();
     }
     else {
         otherCommand();
