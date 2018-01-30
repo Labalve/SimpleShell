@@ -91,7 +91,7 @@ void lsShell()
 
             struct passwd *pw = getpwuid(fileStat.st_uid);
 
-            printFileMode();
+            printFileMode(fileStat);
 
             printf("\t%s\t%d\t%s\t", pw->pw_name, fileStat.st_size, dateBuffer);
         }
@@ -146,6 +146,7 @@ int otherCommand()
     char finalCommand[120];
     strcat(finalCommand, inputHandler);
     for(int i = 0; i < ParamNumber; i++){
+        strcat(finalCommand, " ");
         strcat(finalCommand, inputParamHandler[i]);
     }
     return system(finalCommand);
