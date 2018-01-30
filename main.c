@@ -143,16 +143,12 @@ int printPrompt()
 
 void headShell()
 {
-    FILE *in;
-    int count = 0;
-    long int pos;
-    char s[100];
     int num, pos, count;
     FILE *fp;
-    char (*array)[4096];  /* pointer to an array of buffers */
-    fp = fopen(inputHandler, "r");
+    char (*array)[4096];
+    fp = fopen(inputParamHandler[0], "r");
     if (fp == NULL) {
-        printf("Cannot open file %s\n", argv[1]);
+        printf("Cannot open file\n");
         return 1;
     }
     num = 10;
