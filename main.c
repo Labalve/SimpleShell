@@ -149,30 +149,30 @@ void headShell()
     fp = fopen(inputParamHandler[0], "r");
     if (fp == NULL) {
         printf("Cannot open file\n");
-        return 1;
-    }
-    if(paramNumber == 3){
-        if(inputParamHandler[1] == "-n")
-        {
-            num = atoi(inputParamHandler[2]);
-        }
     } else {
-        num = 10;
-    }
-    array = malloc(4096 * (num + 1));
-    for (count = pos = 0; fgets(array[pos], 4096, fp) != NULL; count++) {
-        if (count < num)
-            fputs(array[pos], stdout);
-        if (++pos >= num + 1)
-            pos = 0;
-    }
-    if (count > num) {
-        pos = count - num;
-        if (pos > num) {
-            printf("...\n");
+        if(paramNumber == 3){
+            if(inputParamHandler[1] == "-n")
+            {
+                num = atoi(inputParamHandler[2]);
+            }
+        } else {
+            num = 10;
         }
+        array = malloc(4096 * (num + 1));
+        for (count = pos = 0; fgets(array[pos], 4096, fp) != NULL; count++) {
+            if (count < num)
+                fputs(array[pos], stdout);
+            if (++pos >= num + 1)
+                pos = 0;
+        }
+        if (count > num) {
+            pos = count - num;
+            if (pos > num) {
+                printf("...\n");
+            }
+        }
+        fclose(fp);
     }
-    fclose(fp);
 }
 
 int otherCommand()
