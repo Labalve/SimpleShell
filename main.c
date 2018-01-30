@@ -37,6 +37,19 @@ void exitShell()
     }
 }
 
+void printFileMode(struct stat fileStat){
+    printf( (S_ISDIR(fileStat.st_mode)) ? "d" : "-");
+    printf( (fileStat.st_mode & S_IRUSR) ? "r" : "-");
+    printf( (fileStat.st_mode & S_IWUSR) ? "w" : "-");
+    printf( (fileStat.st_mode & S_IXUSR) ? "x" : "-");
+    printf( (fileStat.st_mode & S_IRGRP) ? "r" : "-");
+    printf( (fileStat.st_mode & S_IWGRP) ? "w" : "-");
+    printf( (fileStat.st_mode & S_IXGRP) ? "x" : "-");
+    printf( (fileStat.st_mode & S_IROTH) ? "r" : "-");
+    printf( (fileStat.st_mode & S_IWOTH) ? "w" : "-");
+    printf( (fileStat.st_mode & S_IXOTH) ? "x" : "-");
+}
+
 void lsShell()
 {
     char dateBuffer[100];
@@ -74,7 +87,7 @@ void lsShell()
             struct tm * timeinfo;
             time_t epochTimeAsTimeT = epochTime;
             timeinfo = localtime(&epochTimeAsTimeT);
-            strftime (dateBuffer, 80, "%Y %b %d %H:%M", timeinfo);
+            strftime(dateBuffer, 80, "%Y %b %d %H:%M", timeinfo);
 
             struct passwd *pw = getpwuid(fileStat.st_uid);
 
@@ -87,19 +100,6 @@ void lsShell()
     }
     closedir(givenDirectory);
     printf("\n");
-}
-
-void printFileMode(struct stat fileStat){
-    printf( (S_ISDIR(fileStat.st_mode)) ? "d" : "-");
-    printf( (fileStat.st_mode & S_IRUSR) ? "r" : "-");
-    printf( (fileStat.st_mode & S_IWUSR) ? "w" : "-");
-    printf( (fileStat.st_mode & S_IXUSR) ? "x" : "-");
-    printf( (fileStat.st_mode & S_IRGRP) ? "r" : "-");
-    printf( (fileStat.st_mode & S_IWGRP) ? "w" : "-");
-    printf( (fileStat.st_mode & S_IXGRP) ? "x" : "-");
-    printf( (fileStat.st_mode & S_IROTH) ? "r" : "-");
-    printf( (fileStat.st_mode & S_IWOTH) ? "w" : "-");
-    printf( (fileStat.st_mode & S_IXOTH) ? "x" : "-");
 }
 
 void cdShell()
@@ -117,7 +117,7 @@ void cdShell()
 void helpShell()
 {
     char * shortHelp = "This is Simple Shell application created by Krzysztof Kulak as a university project.\nIt implements basic shell functionality.\nUse -l flag to get longer help message.";
-    char * longHelp = "This is Simple Shell application created by Krzysztof Kulak as a university project.\nIt implements basic shell functionality.\n\ncd <PATH> - change directory to path given in <PATH> parameter\nexit <STATUS> - ends Shell process and return 0 or number given in <STATUS> parameter\nhelp <FLAG> - displays help message. Command with -l flag shows longer help message.\nls <FLAG> - lists files and catalogs in the current directory. Flag -a shows hidden files. Flag -l shows extended list view in format: <file mode> <size> <owner> <date of the last modification> <name>/n";
+    char * longHelp = "This is Simple Shell application created by Krzysztof Kulak as a university project.\nIt implements basic shell functionality.\n\ncd <PATH> - change directory to path given in <PATH> parameter\n\nexit <STATUS> - ends Shell process and return 0 or number given in <STATUS> parameter\n\nhelp <FLAG> - displays help message. Command with -l flag shows longer help message.\n\nls <FLAG> - lists files and catalogs in the current directory.\n\tFlag -a shows hidden files.\n\tFlag -l shows extended list view in format: <file mode> <size> <owner> <date of the last modification> <name>\n";
     if(ParamNumber > 0){
         if(strcmp(inputParamHandler[0],"-l") == 0){
             printf("%s", longHelp);
@@ -143,9 +143,12 @@ int printPrompt()
 
 int otherCommand()
 {
-    printf("OTHER COMMAND");
-    printf(inputHandler);
-    return system(inputHandler);
+    char finalCommand[120];
+    strcat(finalCommand, inputHandler);
+    for(int i = 0; i < ParamNumber; i++){
+        strcat(finalCommand, inputParamHandler[i]);
+    }
+    return system(finalCommand);
 }
 
 int getInput()
@@ -180,13 +183,13 @@ void actionManager()
         exitShell();
         printf("\n");
     }
-    if(strcmp(inputHandler, "cd") == 0){
+    else if(strcmp(inputHandler, "cd") == 0){
         cdShell();
     }
-    if(strcmp(inputHandler, "help") == 0){
+    else if(strcmp(inputHandler, "help") == 0){
         helpShell();
     }
-    if(strcmp(inputHandler, "ls") == 0){
+    else if(strcmp(inputHandler, "ls") == 0){
         lsShell();
     }
     else {
