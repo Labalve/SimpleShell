@@ -1,15 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
-#include <string.h>
 #include <dirent.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdbool.h>
 #include <pwd.h>
 #include <time.h>
-#include "helpers.c"
-
+#include "helpers.h"
 
 char * inputHandler;
 char inputParamHandler[10][10];
