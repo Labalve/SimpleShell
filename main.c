@@ -2,7 +2,7 @@
 #include <dirent.h>
 #include <pwd.h>
 #include <time.h>
-#include "helpers.c"
+#include "helpers.h"
 
 
 char * inputHandler;
