@@ -214,6 +214,7 @@ int main()
 {
     welcomeScreen();
     while(1){
+        clearGlobalVars();
         if(printPrompt() == 1){ return 1; }
         while(getInput() == 0){
             printPrompt();
